@@ -7,7 +7,7 @@ import tkFileDialog
 class App(Tk):
     def __init__(self,parent):
         Tk.__init__(self,parent)
-        self.minsize(width=640,height=480)
+        self.geometry("640x480")
         self.create_frame()
         self.wad = WAD()
         self.lump_tree = None
@@ -15,9 +15,9 @@ class App(Tk):
         
     def create_frame(self):
         self.frame = Frame(self, width=640, height=480)
-        self.frame.pack()
+        self.frame.pack(expand=True,fill=BOTH,anchor=W)
         self.button = Button(self.frame,text="Load",command=self.load_wad)
-        self.button.pack(side=LEFT)
+        self.button.pack(anchor=W)
     
     def load_wad(self):
         path = tkFileDialog.askopenfilename()
@@ -28,20 +28,19 @@ class App(Tk):
     
         if (self.lump_tree != None):
             self.lump_tree.destroy()
-        self.lump_tree = Treeview()
+        self.lump_tree = Treeview(self.frame)
         #load groups
         for g in write_order:
             #write the groups
             new_g = self.lump_tree.insert('',0)
             self.lump_tree.item(new_g, text=g)
             for l in getattr(self.wad,g):
-				#write lumps in groups
+                #write lumps in groups
                 new_l = self.lump_tree.insert(new_g,0)
                 self.lump_tree.item(new_l,text=l)
         
-		self.lump_tree.width = 100
-        self.lump_tree.pack(side=LEFT,fill=Y,expand=True)
-        
+        self.lump_tree.width = 100
+        self.lump_tree.pack(anchor=W,fill=Y,expand=True,side=LEFT)
         
         
         
