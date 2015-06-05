@@ -11,6 +11,7 @@ class App(Tk):
         self.create_frame()
         self.wad = WAD()
         self.lump_tree = None
+        self.wad_name = ""
         self.create_tree()
         
     def create_frame(self):
@@ -20,8 +21,9 @@ class App(Tk):
         self.button.pack(anchor=W)
     
     def load_wad(self):
-        path = tkFileDialog.askopenfilename()
+        path = tkFileDialog.askopenfilename(filetypes=[('wad files',"wad")])
         self.wad = WAD(str(path))
+        self.wad_name = path[path.rfind("/")+1:]
         self.create_tree()
     
     def create_tree(self):
@@ -29,6 +31,7 @@ class App(Tk):
         if (self.lump_tree != None):
             self.lump_tree.destroy()
         self.lump_tree = Treeview(self.frame)
+        self.lump_tree.heading("#0",text=self.wad_name)
         #load groups
         for g in write_order:
             #write the groups
