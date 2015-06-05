@@ -35,11 +35,11 @@ class App(Tk):
         #load groups
         for g in write_order:
             #write the groups
-            new_g = self.lump_tree.insert('',0)
+            new_g = self.lump_tree.insert('',len(write_order))
             self.lump_tree.item(new_g, text=g)
             for l in getattr(self.wad,g):
                 #write lumps in groups
-                new_l = self.lump_tree.insert(new_g,0)
+                new_l = self.lump_tree.insert(new_g,len(self.lump_tree.get_children(new_g)))
                 self.lump_tree.item(new_l,text=l)
         
         self.lump_tree.width = 100
