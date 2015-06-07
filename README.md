@@ -9,9 +9,10 @@ Early WIP
 
 Current Features:
 - Load .wad files and view lumps
+- Text and image previews
 
 Planned Features:
-- Previews for various lump types
+- Previews for many more lump types
 - /idgames protocol for viewing wads from the database
 - Option to open wads in source ports and other editors, such as Doombuilder or Slade
 - Simple editors for various lump types
