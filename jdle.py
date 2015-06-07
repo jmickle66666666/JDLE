@@ -3,6 +3,8 @@ from ttk import *
 from Tkconstants import *
 from omg import *
 import tkFileDialog
+from PIL import ImageTk, Image
+import omg.playpal
 
 class App(Tk):
     def __init__(self,parent):
@@ -17,19 +19,71 @@ class App(Tk):
         self.preview_panel = None
         self.create_preview_panel()
         
-    def create_preview_panel(self):
+    def create_preview_panel(self, data=None, lump_type="None", lump_name="None"):
         if (self.preview_panel != None):
             self.preview_panel.destroy()
-        self.preview_panel = Frame(self.frame,background='#ff0000')
-        self.preview_panel.grid(row=0,column=2,sticky="nse")
-        self.preview_panel.bg="#f00"
-        self.frame.columnconfigure(2,weight=1)
-        self.frame.rowconfigure(0,weight=1)
+            
+        if (data==None): #create the normal preview
+            img = ImageTk.PhotoImage(Image.open("midiyearone.png"))
+            self.preview_panel = Label(self.frame, image = img)
+            self.preview_panel.image = img
+            stick = ""
+        else:
+            lump_detect_type = self.detect_lump(data,lump_type,lump_name)
+            self.preview_panel = Label(self.frame,text="I can't preview this lump :<\nlump type: "+lump_detect_type)
+            stick = ""
+            if (lump_detect_type == "TEXT"):
+                self.preview_panel = Frame(self.frame)
+                self.text_view = Text(self.preview_panel)
+                self.text_view.insert(END,data.data)
+                self.text_view["state"]= DISABLED
+                self.text_view["wrap"]=NONE
+                self.text_view.grid(sticky="NEWS")
+                stick = "NEWS"
+                self.preview_panel.columnconfigure(0,weight=1)
+                self.preview_panel.rowconfigure(0,weight=1)
+                ysb = Scrollbar(self.preview_panel,orient='vertical', command=self.text_view.yview)
+                hsb = Scrollbar(self.preview_panel,orient='horizontal', command=self.text_view.xview)
+                self.text_view['yscroll'] = ysb.set
+                self.text_view['xscroll'] = hsb.set
+                ysb.grid(row=0,column=1,sticky="NS")
+                hsb.grid(row=1,column=0,sticky="EW")
+            if (lump_detect_type == "IMAGE"):
+                img = ImageTk.PhotoImage(data.to_Image())
+                self.preview_panel = Label(self.frame, image = img)
+                self.preview_panel.image = img
+                stick = ""
+            if (lump_detect_type == "PLAYPAL"):
+                self.preview_panel = Frame(self.frame)
+                playpal = omg.playpal.Playpal(data)
+                for i in range(0,256):
+                    n_c = LabelFrame(self.preview_panel,cnf={foreground:playpal.palettes[0].get_color_hex(i)})
+                    #n_c["foreground"]=playpal.palettes[0].get_color_hex(i)
+                    n_c.grid(row = i/16, column = i%16)
+                    self.preview_panel.columnconfigure(i % 16,weight=1)
+                    self.preview_panel.rowconfigure(i / 16,weight=1)
+                stick="NEWS"
+                
         
+            
+        self.preview_panel.grid(row=0,column=2,sticky=stick)
+        self.frame.columnconfigure(2,weight=1)
+        
+    def detect_lump(self,data,lump_type,lump_name):
+        text_lumps = ("DEHACKED","MAPINFO","ZMAPINFO","EMAPINFO","DECORATE",
+        "DMXGUS","DMXGUSC")
+        image_types = ("flats","patches","sprites","graphics")
+        unique_types = ("PLAYPAL","COLORMAP","ENDOOM","GENMIDI")
+        if (lump_name in text_lumps): return "TEXT"
+        if (lump_type in image_types): return "IMAGE"
+        if (lump_type == "maps"): return "MAP"
+        if (lump_name in unique_types): return lump_name
+        if ("DEMO" in lump_name): return "DEMO"
+        return ("i dont fucken know, its in the {} group tho".format(lump_type))
         
     def create_frame(self):
         self.frame = Frame(self, width=640, height=480)
-        self.frame.grid(sticky="NSW")
+        self.frame.grid(sticky="NSWE")
         #self.frame.pack(expand=True,fill=BOTH,anchor=W)
         #self.button = Button(self.frame,text="Load",command=self.load_wad)
         #self.button.grid()
@@ -68,16 +122,23 @@ class App(Tk):
         ysb = Scrollbar(self.frame,orient='vertical', command=self.lump_tree.yview)
         self.lump_tree['yscroll'] = ysb.set
         
-        
         self.lump_tree.grid(row=0,column=0,sticky='nsw')
         ysb.grid(row=0,column=1,sticky='nsw')
-        self.frame.columnconfigure(0,weight=1)
-        self.frame.columnconfigure(1,weight=1)
+        self.frame.columnconfigure(0)
+        self.frame.columnconfigure(1)
         self.frame.rowconfigure(0,weight=1)
         
-        #self.lump_tree.pack(anchor=W,fill=Y,expand=True,side=LEFT)
+        #event handling
+        def on_select(event):
+            cur_item_id = self.lump_tree.selection()[0]
+            cur_item = self.lump_tree.item(self.lump_tree.selection()[0])
+            if (cur_item["text"] not in write_order):
+                parent_id = self.lump_tree.parent(cur_item_id)
+                parent_name = self.lump_tree.item(parent_id)["text"]
+                lump = getattr(self.wad,parent_name)[cur_item["text"]]
+                self.create_preview_panel(lump,parent_name,cur_item["text"])
         
-        
+        self.lump_tree.bind("<<TreeviewSelect>>", on_select)
         
         
 app = App(None)
