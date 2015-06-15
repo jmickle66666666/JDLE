@@ -91,6 +91,28 @@ def get_doomretro_info():
     output = {"name":"doom retro", "version":version, "url":download_url, "date":date}
     return output
     
+def get_choclatedoom_info():
+    url="http://www.chocolate-doom.org/wiki/index.php/Downloads"
+    
+    r = requests.get(url)
+    page_data = r.text
+    
+    chunk = page_data[page_data.find("<b>Microsoft Windows</b>"):]
+    chunk = chunk[chunk.find('text" href="')+12:]
+    download_url = chunk[:chunk.find('">')]
+    
+    chunk = chunk[chunk.find("Windows ")+8:]
+    version = chunk[:chunk.find("\n")]
+    
+    r = requests.get("https://github.com/chocolate-doom/chocolate-doom/releases.atom")
+    dpage_data = r.text
+    
+    chunk = dpage_data[dpage_data.find("<updated>")+9:]
+    date = chunk[:chunk.find("</updated>")]
+    
+    output = {"name":"chocolate doom", "version":version, "url":download_url, "date":date}
+    return output
+    
 #todo:
 #  -chocolate doom
 #  -cripsy doom
