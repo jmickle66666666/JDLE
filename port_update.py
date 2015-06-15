@@ -1,7 +1,7 @@
 import requests
 
-#       all data returned in tuples
-#       (port name, date, download_url, version)
+#       all data returned in objects
+#       {"name","date","version","url"}
 
 def generalized_drdteam_info(page):
     base_url = "http://devbuilds.drdteam.org"
