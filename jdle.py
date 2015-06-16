@@ -2,15 +2,18 @@ from Tkinter import *
 from ttk import *
 from Tkconstants import *
 from omg import *
-import tkFileDialog
+from jdle_data import *
 from PIL import ImageTk, Image
+import os.path
 import omg.playpal
+import tkFileDialog
+import sys
 
 class App(Tk):
     def __init__(self,parent):
         Tk.__init__(self,parent)
-        self.geometry("640x480")
-        self.title("JDLE")
+        self.geometry(SCREEN_SIZE)
+        self.title(TITLE)
         self.create_frame()
         self.wad = WAD()
         self.lump_tree = None
@@ -19,18 +22,20 @@ class App(Tk):
         self.preview_panel = None
         self.create_preview_panel()
         
+        
     def create_preview_panel(self, data=None, lump_type="None", lump_name="None"):
         if (self.preview_panel != None):
             self.preview_panel.destroy()
             
         if (data==None): #create the normal preview
-            img = ImageTk.PhotoImage(Image.open("midiyearone.png"))
+            jdle_dir = os.path.dirname(os.path.abspath(__file__))
+            img = ImageTk.PhotoImage(Image.open(os.path.join(jdle_dir, SPLASH_IMAGE)))
             self.preview_panel = Label(self.frame, image = img)
             self.preview_panel.image = img
             stick = ""
         else:
             lump_detect_type = self.detect_lump(data,lump_type,lump_name)
-            self.preview_panel = Label(self.frame,text="I can't preview this lump :<\nlump type: "+lump_detect_type)
+            self.preview_panel = Label(self.frame,text="{0}\nLump type: {1}".format(NO_PREVIEW,lump_detect_type))
             stick = ""
             if (lump_detect_type == "TEXT"):
                 self.preview_panel = Frame(self.frame)
@@ -79,28 +84,37 @@ class App(Tk):
         if (lump_type == "maps"): return "MAP"
         if (lump_name in unique_types): return lump_name
         if ("DEMO" in lump_name): return "DEMO"
-        return ("i dont fucken know, its in the {} group tho".format(lump_type))
+        return ("{0}\nLump group: {1}".format(UNKNOWN_LUMP,lump_type))
         
     def create_frame(self):
         self.frame = Frame(self, width=640, height=480)
         self.frame.grid(sticky="NSWE")
-        #self.frame.pack(expand=True,fill=BOTH,anchor=W)
-        #self.button = Button(self.frame,text="Load",command=self.load_wad)
-        #self.button.grid()
-        #self.button.pack(anchor=W)
         self.columnconfigure(0,weight=1)
         self.rowconfigure(0,weight=1)
         menubar = Menu(self.frame)
-        menubar.add_command(label="Load", command=self.load_wad)
+        menubar.add_command(label="Load", command=self.load_dialog)
         self.config(menu=menubar)
     
-    def load_wad(self):
+    def load_dialog(self):
         path = tkFileDialog.askopenfilename(filetypes=[('wad files',"wad")])
-        self.title("JDLE - "+path)
-        self.wad = WAD(str(path))
-        self.wad_name = path[path.rfind("/")+1:]
+        self.load_wad(path)
+    
+    def load_wad(self, path):
+        
+        try:
+            self.wad = WAD(str(path))
+        except AssertionError:
+            dialog = Dialog(None,"Error loading file: {}".format(path))
+            return
+            
+        self.title("JDLE - "+path)    
+        if ("/" in path):
+            self.wad_name = path[path.rfind("/")+1:]
+        else:
+            self.wad_name = path[path.rfind("\\")+1:]
         self.create_tree()
     
+
     def create_tree(self):
     
         if (self.lump_tree != None):
@@ -140,6 +154,22 @@ class App(Tk):
         
         self.lump_tree.bind("<<TreeviewSelect>>", on_select)
         
-        
+class Dialog(Tk):
+    def __init__(self,parent,text):
+        Tk.__init__(self,parent)
+        self.frame = Frame(self)
+        self.frame.pack()
+        self.label = Label(self.frame,text=text)
+        self.label.pack()
+        self.button = Button(self.frame, text="OK", command=self.close)
+        self.button.pack()
+    
+    def close(self):
+        self.destroy()
+
+
 app = App(None)
+if (len(sys.argv) == 2):
+    #load the argument as a wad
+    app.load_wad(sys.argv[1])
 app.mainloop()
