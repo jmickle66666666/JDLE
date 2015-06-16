@@ -29,7 +29,7 @@ class App(Tk):
             
         if (data==None): #create the normal preview
             jdle_dir = os.path.dirname(os.path.abspath(__file__))
-            img = ImageTk.PhotoImage(Image.open(os.path.join(jdle_dir, SPLASH_IMAGE)))
+            img = ImageTk.PhotoImage(Image.open(SPLASH_IMAGE))
             self.preview_panel = Label(self.frame, image = img)
             self.preview_panel.image = img
             stick = ""
