@@ -3,10 +3,10 @@ from ttk import *
 from Tkconstants import *
 from omg import *
 from jdle_data import *
-from PIL import ImageTk, Image
 import os.path
 import omg.playpal
 import tkFileDialog
+from PIL import Image, ImageTk
 import sys
 
 class App(Tk):
