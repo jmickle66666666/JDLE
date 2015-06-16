@@ -1,8 +1,5 @@
 import requests
 
-#       all data returned in objects
-#       {"name","date","version","url"}
-
 def generalized_drdteam_info(page):
     base_url = "http://devbuilds.drdteam.org"
     url = base_url+"/"+page+"/"
@@ -91,7 +88,7 @@ def get_doomretro_info():
     output = {"name":"doom retro", "version":version, "url":download_url, "date":date}
     return output
     
-def get_choclatedoom_info():
+def get_chocolatedoom_info():
     url="http://www.chocolate-doom.org/wiki/index.php/Downloads"
     
     r = requests.get(url)
@@ -113,11 +110,6 @@ def get_choclatedoom_info():
     output = {"name":"chocolate doom", "version":version, "url":download_url, "date":date}
     return output
     
-#todo:
-#  -chocolate doom
-#  -cripsy doom
-#  -chocorenderlimits
-    
 def print_info(data):
     print("---")
     print("Port: "+data["name"])
@@ -133,6 +125,7 @@ def get_all_info():
     output.append(get_prboomplus_info())
     output.append(get_zandronum_info())
     output.append(get_doomretro_info())
+    output.append(get_chocolatedoom_info())
     return output
     
 data = get_all_info()
