@@ -44,5 +44,6 @@ Temporary Items
 
 # Build folder
 build/*
-dist/jdle/*
+dist/*
+download/*
 *.spec

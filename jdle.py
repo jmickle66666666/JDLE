@@ -3,6 +3,7 @@ from ttk import *
 from Tkconstants import *
 from omg import *
 from jdle_data import *
+from idgames_ui import *
 import os.path
 import omg.playpal
 import tkFileDialog
@@ -28,7 +29,6 @@ class App(Tk):
             self.preview_panel.destroy()
             
         if (data==None): #create the normal preview
-            jdle_dir = os.path.dirname(os.path.abspath(__file__))
             img = ImageTk.PhotoImage(Image.open(SPLASH_IMAGE))
             self.preview_panel = Label(self.frame, image = img)
             self.preview_panel.image = img
@@ -93,11 +93,15 @@ class App(Tk):
         self.rowconfigure(0,weight=1)
         menubar = Menu(self.frame)
         menubar.add_command(label="Load", command=self.load_dialog)
+        menubar.add_command(label="idgames", command=self.open_idgames)
         self.config(menu=menubar)
     
     def load_dialog(self):
         path = tkFileDialog.askopenfilename(filetypes=[('wad files',"wad")])
         self.load_wad(path)
+    
+    def open_idgames(self):
+        Idgames_UI(None,self)
     
     def load_wad(self, path):
         
@@ -113,7 +117,6 @@ class App(Tk):
         else:
             self.wad_name = path[path.rfind("\\")+1:]
         self.create_tree()
-    
 
     def create_tree(self):
     
