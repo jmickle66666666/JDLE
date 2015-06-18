@@ -3,6 +3,8 @@ JMickle's Doom Lump Editor
 
 Requirements:
 https://github.com/jmickle1/omgifol
+https://github.com/python-pillow/Pillow
+https://github.com/kennethreitz/requests
 
 A simple lump viewing/editing tool, built in Python on top of the Omgifol library.
 Early WIP
