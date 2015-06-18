@@ -42,6 +42,9 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# python files
+*.pyc
+
 # Build folder
 build/*
 dist/*
