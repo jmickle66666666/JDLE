@@ -1,11 +1,5 @@
 import json
 
-obj = {}
-obj["fart"] = "imo"
-obj["ridic"] = "ulous"
-obj["nevermind"] = { "the":"police", "too":"much", "apples":50 }
-obj["imo"] = 20
-
 def format_json(json):
     output = json.replace("{","{\n")
     output = output.replace("}","\n}")
@@ -23,7 +17,3 @@ def format_json(json):
     
     return chunk_tab(output,0)
     
-json = json.dumps(obj)
-f = open("test.json","w")
-f.write(format_json(json))
-f.close()
