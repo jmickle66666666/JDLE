@@ -7,6 +7,7 @@ from idgames_ui import *
 import os.path
 import omg.playpal
 import tkFileDialog
+import subprocess
 from PIL import Image, ImageTk
 import sys
 
@@ -94,11 +95,15 @@ class App(Tk):
         menubar = Menu(self.frame)
         menubar.add_command(label="Load", command=self.load_dialog)
         menubar.add_command(label="idgames", command=self.open_idgames)
+        menubar.add_command(label="zdoom", command=self.load_in_zdoom)
         self.config(menu=menubar)
     
+    def load_in_zdoom(self):
+        subprocess.call(ZDOOM_PATH+" -file "+self.wadpath)
+    
     def load_dialog(self):
-        path = tkFileDialog.askopenfilename(filetypes=[('wad files',"wad")])
-        self.load_wad(path)
+        self.wadpath = tkFileDialog.askopenfilename(filetypes=[('wad files',"wad")])
+        self.load_wad(self.wadpath)
     
     def open_idgames(self):
         Idgames_UI(None,self)

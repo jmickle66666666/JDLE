@@ -47,3 +47,4 @@ build/*
 dist/*
 download/*
 *.spec
+*.pyc

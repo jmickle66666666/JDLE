@@ -64,6 +64,7 @@ class Idgames_wad_UI(Tk):
         print(wadfile)
         wadpath = zf.extract(wadfile,JDLE_DIR+"/download/")
         zf.close()
+        self.idgamesui.main_ui.wadpath=wadpath
         self.idgamesui.main_ui.load_wad(wadpath)
         self.idgamesui.destroy()
         self.destroy()
