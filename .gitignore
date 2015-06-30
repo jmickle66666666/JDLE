@@ -49,5 +49,7 @@ Temporary Items
 build/*
 dist/*
 download/*
+.idea/*
 *.spec
 *.pyc
+

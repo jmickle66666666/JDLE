@@ -1,5 +1,6 @@
 import requests
 
+
 def generalized_drdteam_info(page):
     base_url = "http://devbuilds.drdteam.org"
     url = base_url+"/"+page+"/"
@@ -16,15 +17,18 @@ def generalized_drdteam_info(page):
     
     version = filename[filename.find("-")+1:filename.rfind("-")]
     
-    output = {"name":page, "date":date, "url":download_url, "version":version}
+    output = {"name": page, "date": date, "url": download_url, "version": version}
     
     return output
 
+
 def get_gzdoom_info():
     return generalized_drdteam_info("gzdoom")
-    
+
+
 def get_zdoom_info():
     return generalized_drdteam_info("zdoom")
+
 
 def get_prboomplus_info():
     url = "http://prboom-plus.sourceforge.net/history.html"
@@ -41,13 +45,15 @@ def get_prboomplus_info():
     chunk = chunk[chunk.find('<a href="')+9:]
     download_url = chunk[:chunk.find('">win32')]
     
-    output = {"name":"prboom-plus", "date":date, "url":download_url, "version":version}
+    output = {"name": "prboom-plus", "date": date, "url": download_url, "version": version}
     return output
+
 
 def get_eternity_info():
     return generalized_drdteam_info("eternity")
-    
-def  get_zandronum_info():
+
+
+def get_zandronum_info():
     url = "http://zandronum.com/download"
     base_url = "http://zandronum.com"
     
@@ -63,9 +69,10 @@ def  get_zandronum_info():
     chunk = chunk[chunk.find('a href="')+8:]
     download_url = base_url + chunk[:chunk.find('">')]
     
-    output = {"name":"zandronum", "version":version, "date":date, "url":download_url}
+    output = {"name": "zandronum", "version": version, "date": date, "url": download_url}
     return output
-    
+
+
 def get_doomretro_info():
     url = "https://github.com/bradharding/doomretro/releases.atom"
     
@@ -85,11 +92,12 @@ def get_doomretro_info():
     chunk = chunk[chunk.find('<a href="')+9:]
     download_url = "https://www.github.com"+chunk[:chunk.find('" rel=')]
     
-    output = {"name":"doom retro", "version":version, "url":download_url, "date":date}
+    output = {"name": "doom retro", "version": version, "url": download_url, "date": date}
     return output
-    
+
+
 def get_chocolatedoom_info():
-    url="http://www.chocolate-doom.org/wiki/index.php/Downloads"
+    url = "http://www.chocolate-doom.org/wiki/index.php/Downloads"
     
     r = requests.get(url)
     page_data = r.text
@@ -107,18 +115,20 @@ def get_chocolatedoom_info():
     chunk = dpage_data[dpage_data.find("<updated>")+9:]
     date = chunk[:chunk.find("</updated>")]
     
-    output = {"name":"chocolate doom", "version":version, "url":download_url, "date":date}
+    output = {"name": "chocolate doom", "version": version, "url": download_url, "date": date}
     return output
-    
-def print_info(data):
+
+
+def print_info(port_data):
     print("---")
-    print("Port: "+data["name"])
-    print("Latest version: "+data["version"])
-    print("Updated on: "+data["date"])
-    print("Download: "+data["url"])
+    print("Port: "+port_data["name"])
+    print("Latest version: "+port_data["version"])
+    print("Updated on: "+port_data["date"])
+    print("Download: "+port_data["url"])
+
 
 def get_all_info():
-    output = []
+    output = list()
     output.append(get_gzdoom_info())
     output.append(get_zdoom_info())
     output.append(get_eternity_info())
