@@ -19,6 +19,7 @@ Planned Features:
 - External editor settings for all lump-types for ease of editing
 - Option to open wads in source ports and other editors, such as Doombuilder or Slade
 - Simple editors for various lump types
+- Extra tools in-built to the software such as a texture creator/generator, or other silly things
 
 Built as a personal project for experimental or proof-of-concept lump editing features. 
 Slade 3 (http://slade.mancubus.net/) is still king in terms of lump editing, and I don't intend to try and replace it :~)
