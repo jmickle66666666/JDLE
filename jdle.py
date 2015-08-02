@@ -3,13 +3,15 @@ from ttk import *
 from Tkconstants import *
 from omg import *
 from jdle_data import *
-from idgamesui import *
+from views.idgamesui import *
 import os.path
 import omg.playpal
 import tkFileDialog
 import subprocess
 from PIL import Image, ImageTk
 import sys
+import views.textlump
+import views.imagelump
 
 
 class App(Tk):
@@ -41,25 +43,10 @@ class App(Tk):
             self.preview_panel = Label(self.frame, text="{0}\nLump type: {1}".format(NO_PREVIEW, lump_detect_type))
             stick = ""
             if lump_detect_type == "TEXT":
-                self.preview_panel = Frame(self.frame)
-                self.text_view = Text(self.preview_panel)
-                self.text_view.insert(END, data.data)
-                self.text_view["state"] = DISABLED
-                self.text_view["wrap"] = NONE
-                self.text_view.grid(sticky="NEWS")
-                stick = "NEWS"
-                self.preview_panel.columnconfigure(0, weight=1)
-                self.preview_panel.rowconfigure(0, weight=1)
-                ysb = Scrollbar(self.preview_panel, orient='vertical', command=self.text_view.yview)
-                hsb = Scrollbar(self.preview_panel, orient='horizontal', command=self.text_view.xview)
-                self.text_view['yscroll'] = ysb.set
-                self.text_view['xscroll'] = hsb.set
-                ysb.grid(row=0, column=1, sticky="NS")
-                hsb.grid(row=1, column=0, sticky="EW")
+                self.preview_panel = views.textlump.TextLump(self.frame,data)
+                stick="news"
             if lump_detect_type == "IMAGE":
-                img = ImageTk.PhotoImage(data.to_Image())
-                self.preview_panel = Label(self.frame, image=img)
-                self.preview_panel.image = img
+                self.preview_panel = views.imagelump.ImageLump(self.frame,data)
                 stick = ""
 
         self.preview_panel.grid(row=0, column=2, sticky=stick)
@@ -92,14 +79,19 @@ class App(Tk):
         menubar.add_command(label="Load", command=self.load_dialog)
         menubar.add_command(label="idgames", command=self.open_idgames)
         menubar.add_command(label="zdoom", command=self.load_in_zdoom)
+        menubar.add_command(label="load test wad", command=self.load_test_wad)
         self.config(menu=menubar)
     
+    def load_test_wad(self):
+        self.wad_path = r'D:\Doom\IWADs\freedoom2.wad'
+        self.load_wad(self.wad_path)
+    
     def load_in_zdoom(self):
-        subprocess.call(ZDOOM_PATH+" -file "+self.wadpath)
+        subprocess.call(ZDOOM_PATH+" -file "+self.wad_path)
     
     def load_dialog(self):
         self.wad_path = tkFileDialog.askopenfilename(filetypes=[('wad files', "wad")])
-        self.load_wad(self.wadpath)
+        self.load_wad(self.wad_path)
     
     def open_idgames(self):
         IdgamesUI(None, self)
@@ -108,7 +100,7 @@ class App(Tk):
         
         try:
             self.wad = WAD(str(path))
-        except AssertionError:
+        except AssertionError, AttributeError:
             Dialog(None, "Error loading file: {}".format(path))
             return
             
@@ -173,8 +165,9 @@ class Dialog(Tk):
         self.destroy()
 
 
-app = App(None)
-if len(sys.argv) == 2:
-    # load the argument as a wad
-    app.load_wad(sys.argv[1])
-app.mainloop()
+if __name__ == '__main__':
+    app = App(None)
+    if len(sys.argv) == 2:
+        # load the argument as a wad
+        app.load_wad(sys.argv[1])
+    app.mainloop()
