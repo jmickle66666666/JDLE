@@ -12,6 +12,7 @@ from PIL import Image, ImageTk
 import sys
 import views.textlump
 import views.imagelump
+import views.decorateui
 
 
 class App(Tk):
@@ -25,39 +26,81 @@ class App(Tk):
         self.wad_name = ""
         self.create_tree()
         self.preview_panel = None
+        self.preview_frame = None
+        self.btn_grid = None
         self.create_preview_panel()
         self.wad_path = ""
         self.text_view = None
 
-    def create_preview_panel(self, data=None, lump_type="None", lump_name="None"):
+    def create_preview_panel(self, data=None, lump_type="None", lump_name="None", force_view="None"):
+        if self.preview_frame is None:
+            self.preview_frame = Frame(self.frame)
+            self.preview_frame.grid(row=0,column=2, sticky="news")
+            self.frame.columnconfigure(2, weight=1)
+            self.frame.rowconfigure(0, weight=1)
+    
         if self.preview_panel is not None:
             self.preview_panel.destroy()
             
-        if data is None:  # create the normal preview
+        if self.btn_grid is not None:
+            self.btn_grid.destroy()
+            
+        if data is None:  # create a default preview
             img = ImageTk.PhotoImage(Image.open(SPLASH_IMAGE))
-            self.preview_panel = Label(self.frame, image=img)
+            self.preview_panel = Label(self.preview_frame, image=img)
             self.preview_panel.image = img
             stick = ""
         else:
             lump_detect_type = self.detect_lump(data, lump_type, lump_name)
-            self.preview_panel = Label(self.frame, text="{0}\nLump type: {1}".format(NO_PREVIEW, lump_detect_type))
+            if force_view != "None":
+                lump_detect_type = force_view
+            self.preview_panel = Label(self.preview_frame, text="{0}\nLump type: {1}".format(NO_PREVIEW, lump_detect_type))
             stick = ""
             if lump_detect_type == "TEXT":
-                self.preview_panel = views.textlump.TextLump(self.frame,data)
+                self.preview_panel = views.textlump.TextLump(self.preview_frame,data)
                 stick="news"
             if lump_detect_type == "IMAGE":
-                self.preview_panel = views.imagelump.ImageLump(self.frame,data)
+                self.preview_panel = views.imagelump.ImageLump(self.preview_frame,data)
                 stick = ""
+            if lump_detect_type == "DECORATE":
+                self.preview_panel = views.decorateui.DecorateUI(self.preview_frame,data,self.wad)
+                stick = "news"
+                
+            #create buttons here
+            def view_as_text():
+                self.create_preview_panel(data,lump_type,lump_name,"TEXT")
+            
+            def save_data():
+                lump = self.preview_panel.save_data()
+                self.wad.data[lump_name] = lump
+                self.create_preview_panel(self.wad.data[lump_name],lump_type,lump_name)
+            
+            self.btn_grid = Frame(self.preview_frame)
+            self.btn_grid.grid(row=1,column=0,sticky="w")
+            
+            self.btn_viewastext = Button(self.btn_grid,text="View as text",command = view_as_text)
+            if lump_detect_type == "TEXT":
+                self.btn_viewastext.configure(state=DISABLED)
+            self.btn_viewastext.grid(row=0,column=0,sticky="w")
+                
+            self.btn_save = Button(self.btn_grid,text="Save",state=DISABLED)
+            if (hasattr(self.preview_panel,'save_data')):
+                self.btn_save.configure(state=NORMAL,command=save_data)
+            self.btn_save.grid(row=0,column=1,sticky="w")
 
-        self.preview_panel.grid(row=0, column=2, sticky=stick)
-        self.frame.columnconfigure(2, weight=1)
+        self.preview_panel.grid(row=0, column=0, sticky=stick)
+        self.preview_frame.columnconfigure(0, weight=1)
+        self.preview_frame.rowconfigure(0, weight=1)
+        
+        
+
 
     @staticmethod
     def detect_lump(data, lump_type, lump_name):
-        text_lumps = ("DEHACKED", "MAPINFO", "ZMAPINFO", "EMAPINFO", "DECORATE",
+        text_lumps = ("DEHACKED", "MAPINFO", "ZMAPINFO", "EMAPINFO", 
                       "DMXGUS", "DMXGUSC")
         image_groups = ("flats", "patches", "sprites", "graphics")
-        unique_lumps = ("PLAYPAL", "COLORMAP", "ENDOOM", "GENMIDI")
+        unique_lumps = ("PLAYPAL", "COLORMAP", "ENDOOM", "GENMIDI", "DECORATE")
         if lump_name in text_lumps:
             return "TEXT"
         if lump_type in image_groups:
@@ -83,7 +126,7 @@ class App(Tk):
         self.config(menu=menubar)
     
     def load_test_wad(self):
-        self.wad_path = r'D:\Doom\IWADs\freedoom2.wad'
+        self.wad_path = r'D:\Doom\wads\valiant_final.wad'
         self.load_wad(self.wad_path)
     
     def load_in_zdoom(self):
