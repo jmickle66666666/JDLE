@@ -13,6 +13,7 @@ Current Features:
 - Load .wad files and view lumps
 - Text and image previews
 - /idgames protocol for viewing wads from the database
+- DECORATE actor/state viewer
 
 Planned Features:
 - Previews for many more lump types
