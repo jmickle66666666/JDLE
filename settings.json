@@ -1,4 +1,5 @@
 {
     "screen_size":"800x600",
-    "zdoom_path":"D:/Doom/Ports/zdoom 2.7.1/zdoom.exe"
+    "zdoom_path":"D:/Doom/Ports/zdoom 2.7.1/zdoom.exe",
+    "idgames_mirror_url":"http://ftp.ntua.gr/pub/vendors/idgames/"
 }

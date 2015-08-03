@@ -1,5 +1,5 @@
 import threading
-import utils.idgames
+import utils.idgames as idgames
 import requests
 from Tkinter import *
 from jdle_data import *
@@ -98,9 +98,7 @@ class IdgamesUI(Tk):
     def __init__(self, parent, main_ui):
         Tk.__init__(self, parent)
         self.geometry(IDGAMES_SCREEN_SIZE)
-        self.build_ui()
         self.title(IDGAMES_TITLE)
-        self.load_latest()
         self.main_ui = main_ui
         self.result_data = None
         self.last_value = ""
@@ -110,6 +108,8 @@ class IdgamesUI(Tk):
         self.innerframe = None
         self.results_box = None
         self.results_box_yscroll = None
+        self.build_ui()
+        self.load_latest()
     
     def load_latest(self):
         

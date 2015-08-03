@@ -12,6 +12,7 @@ from PIL import Image, ImageTk
 import sys
 import views.textlump
 import views.imagelump
+import views.settingsui
 import views.decorateui
 
 
@@ -119,10 +120,23 @@ class App(Tk):
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
         menubar = Menu(self.frame)
-        menubar.add_command(label="Load", command=self.load_dialog)
-        menubar.add_command(label="idgames", command=self.open_idgames)
-        menubar.add_command(label="zdoom", command=self.load_in_zdoom)
-        menubar.add_command(label="load test wad", command=self.load_test_wad)
+        # file menu
+        filemenu = Menu(menubar, tearoff=0)
+        filemenu.add_command(label="New")
+        filemenu.add_command(label="Load", command=self.load_dialog)
+        filemenu.add_command(label="Save")
+        filemenu.add_command(label="Quit")
+        menubar.add_cascade(label="File", menu=filemenu)
+        
+        # stuff menu
+        stuffmenu = Menu(menubar, tearoff=0)
+        stuffmenu.add_command(label="idgames", command=self.open_idgames)
+        stuffmenu.add_command(label="zdoom", command=self.load_in_zdoom)
+        stuffmenu.add_command(label="load test wad", command=self.load_test_wad)
+        stuffmenu.add_command(label="settings", command=self.open_settings)
+        menubar.add_cascade(label="Stuff", menu=stuffmenu)
+        
+        
         self.config(menu=menubar)
     
     def load_test_wad(self):
@@ -138,6 +152,9 @@ class App(Tk):
     
     def open_idgames(self):
         IdgamesUI(None, self)
+        
+    def open_settings(self):
+        views.settingsui.SettingsUI(None)
     
     def load_wad(self, path):
         

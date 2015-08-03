@@ -95,3 +95,6 @@ def search(query, type=None, sort=None, dir=None):
     if dir is not None:
         params["dir"] = dir
     return api_call("search", params)
+    
+if __name__ == '__main__':
+    print(latest_files())
