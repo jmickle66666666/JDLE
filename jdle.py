@@ -1,11 +1,6 @@
-from Tkinter import *
 from ttk import *
-from Tkconstants import *
 from omg import *
-from jdle_data import *
 from views.idgamesui import *
-import os.path
-import omg.playpal
 import tkFileDialog
 import subprocess
 from PIL import Image, ImageTk
@@ -29,6 +24,8 @@ class App(Tk):
         self.preview_panel = None
         self.preview_frame = None
         self.btn_grid = None
+        self.btn_save = None
+        self.btn_viewastext = None
         self.create_preview_panel()
         self.wad_path = ""
         self.text_view = None
@@ -36,7 +33,7 @@ class App(Tk):
     def create_preview_panel(self, data=None, lump_type="None", lump_name="None", force_view="None"):
         if self.preview_frame is None:
             self.preview_frame = Frame(self.frame)
-            self.preview_frame.grid(row=0,column=2, sticky="news")
+            self.preview_frame.grid(row=0, column=2, sticky="news")
             self.frame.columnconfigure(2, weight=1)
             self.frame.rowconfigure(0, weight=1)
     
@@ -55,46 +52,44 @@ class App(Tk):
             lump_detect_type = self.detect_lump(data, lump_type, lump_name)
             if force_view != "None":
                 lump_detect_type = force_view
-            self.preview_panel = Label(self.preview_frame, text="{0}\nLump type: {1}".format(NO_PREVIEW, lump_detect_type))
+            self.preview_panel = Label(self.preview_frame, text="{0}\nLump type: {1}".format(NO_PREVIEW,
+                                                                                             lump_detect_type))
             stick = ""
             if lump_detect_type == "TEXT":
-                self.preview_panel = views.textlump.TextLump(self.preview_frame,data)
-                stick="news"
+                self.preview_panel = views.textlump.TextLump(self.preview_frame, data)
+                stick = "news"
             if lump_detect_type == "IMAGE":
-                self.preview_panel = views.imagelump.ImageLump(self.preview_frame,data)
+                self.preview_panel = views.imagelump.ImageLump(self.preview_frame, data)
                 stick = ""
             if lump_detect_type == "DECORATE":
-                self.preview_panel = views.decorateui.DecorateUI(self.preview_frame,data,self.wad)
+                self.preview_panel = views.decorateui.DecorateUI(self.preview_frame, data, self.wad)
                 stick = "news"
                 
-            #create buttons here
+            # create buttons here
             def view_as_text():
-                self.create_preview_panel(data,lump_type,lump_name,"TEXT")
+                self.create_preview_panel(data, lump_type, lump_name, "TEXT")
             
             def save_data():
-                lump = self.preview_panel.save_data()
-                self.wad.data[lump_name] = lump
-                self.create_preview_panel(self.wad.data[lump_name],lump_type,lump_name)
+                save_lump = self.preview_panel.save_data()
+                self.wad.data[lump_name] = save_lump
+                self.create_preview_panel(self.wad.data[lump_name], lump_type, lump_name)
             
             self.btn_grid = Frame(self.preview_frame)
-            self.btn_grid.grid(row=1,column=0,sticky="w")
+            self.btn_grid.grid(row=1, column=0, sticky="w")
             
-            self.btn_viewastext = Button(self.btn_grid,text="View as text",command = view_as_text)
+            self.btn_viewastext = Button(self.btn_grid, text="View as text", command=view_as_text)
             if lump_detect_type == "TEXT":
                 self.btn_viewastext.configure(state=DISABLED)
-            self.btn_viewastext.grid(row=0,column=0,sticky="w")
+            self.btn_viewastext.grid(row=0, column=0, sticky="w")
                 
-            self.btn_save = Button(self.btn_grid,text="Save",state=DISABLED)
-            if (hasattr(self.preview_panel,'save_data')):
-                self.btn_save.configure(state=NORMAL,command=save_data)
-            self.btn_save.grid(row=0,column=1,sticky="w")
+            self.btn_save = Button(self.btn_grid,  text="Save", state=DISABLED)
+            if hasattr(self.preview_panel, 'save_data'):
+                self.btn_save.configure(state=NORMAL, command=save_data)
+            self.btn_save.grid(row=0,  column=1, sticky="w")
 
         self.preview_panel.grid(row=0, column=0, sticky=stick)
         self.preview_frame.columnconfigure(0, weight=1)
         self.preview_frame.rowconfigure(0, weight=1)
-        
-        
-
 
     @staticmethod
     def detect_lump(data, lump_type, lump_name):
@@ -135,8 +130,7 @@ class App(Tk):
         stuffmenu.add_command(label="load test wad", command=self.load_test_wad)
         stuffmenu.add_command(label="settings", command=self.open_settings)
         menubar.add_cascade(label="Stuff", menu=stuffmenu)
-        
-        
+
         self.config(menu=menubar)
     
     def load_test_wad(self):
@@ -160,7 +154,7 @@ class App(Tk):
         
         try:
             self.wad = WAD(str(path))
-        except AssertionError, AttributeError:
+        except AssertionError:
             Dialog(None, "Error loading file: {}".format(path))
             return
             

@@ -1,20 +1,19 @@
 from Tkinter import *
-from Tkconstants import *
-from jdle_data import *
+
 
 class SettingsUI(Tk):
-    def __init__(self,parent):
-        Tk.__init__(self,parent)
-        options = ["screen_size","zdoom_path"]
+    def __init__(self,  parent):
+        Tk.__init__(self,  parent)
+        options = ["screen_size", "zdoom_path"]
         for i in range(len(options)):
             o = options[i]
-            label = Label(self,text=o)
-            label.grid(row=i,column=0)
+            label = Label(self, text=o)
+            label.grid(row=i, column=0)
             textfield = Text(self)
-            textfield.configure(height=1,width=20)
-            textfield.grid(row=i,column=1)
-        btn_done = Button(self,text="Done")
-        btn_done.grid(row=len(options),column=1,sticky="e",command=self.save_settings())
+            textfield.configure(height=1, width=20)
+            textfield.grid(row=i, column=1)
+        btn_done = Button(self, text="Done")
+        btn_done.grid(row=len(options), column=1, sticky="e", command=self.save_settings())
     
     # def save_settings(self):
         

@@ -2,9 +2,10 @@ from Tkinter import *
 from Tkconstants import *
 import omg
 
+
 class TextLump(Frame):
     def __init__(self, parent, data):
-        Frame.__init__(self,parent)
+        Frame.__init__(self, parent)
         self.text_view = Text(self)
         self.text_view.insert(END, data.data)
         # self.text_view["state"] = DISABLED
@@ -24,11 +25,11 @@ class TextLump(Frame):
         return output_lump
             
 if __name__ == '__main__':
-    class Test_data:
+    class TestData:
         def __init__(self):
             self.data = "Fart Fart Fart\nfart\n"
     app = Tk(None)
-    TextLump(app,Test_data()).grid(sticky="news")
+    TextLump(app, TestData()).grid(sticky="news")
     app.columnconfigure(0, weight=1)
     app.rowconfigure(0, weight=1)
     app.mainloop()

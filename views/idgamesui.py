@@ -193,4 +193,3 @@ class IdgamesUI(Tk):
         self.innerframe.rowconfigure(0, weight=1)
         
         self.results_box.bind("<<ListboxSelect>>", self.on_result_click)
-
