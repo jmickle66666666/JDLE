@@ -3,7 +3,7 @@ from omg import *
 from views.idgamesui import *
 import tkFileDialog
 import subprocess
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, _imaging
 import sys
 import views.textlump
 import views.imagelump
@@ -94,7 +94,8 @@ class App(Tk):
     @staticmethod
     def detect_lump(data, lump_type, lump_name):
         text_lumps = ("DEHACKED", "MAPINFO", "ZMAPINFO", "EMAPINFO", 
-                      "DMXGUS", "DMXGUSC")
+                      "DMXGUS", "DMXGUSC", "WADINFO", "EMENUS", "MUSINFO",
+                      "SNDINFO", "GLDEFS", "KEYCONF", "SCRIPTS", "LANGUAGE")
         image_groups = ("flats", "patches", "sprites", "graphics")
         unique_lumps = ("PLAYPAL", "COLORMAP", "ENDOOM", "GENMIDI", "DECORATE")
         if lump_name in text_lumps:
@@ -117,21 +118,24 @@ class App(Tk):
         menubar = Menu(self.frame)
         # file menu
         filemenu = Menu(menubar, tearoff=0)
-        filemenu.add_command(label="New")
+        filemenu.add_command(label="New", state=DISABLED)
         filemenu.add_command(label="Load", command=self.load_dialog)
-        filemenu.add_command(label="Save")
-        filemenu.add_command(label="Quit")
+        filemenu.add_command(label="Save", command=self.save_wad)
+        filemenu.add_command(label="Quit", state=DISABLED)
         menubar.add_cascade(label="File", menu=filemenu)
         
         # stuff menu
         stuffmenu = Menu(menubar, tearoff=0)
         stuffmenu.add_command(label="idgames", command=self.open_idgames)
         stuffmenu.add_command(label="zdoom", command=self.load_in_zdoom)
-        stuffmenu.add_command(label="load test wad", command=self.load_test_wad)
+        # stuffmenu.add_command(label="load test wad", command=self.load_test_wad)
         stuffmenu.add_command(label="settings", command=self.open_settings)
         menubar.add_cascade(label="Stuff", menu=stuffmenu)
 
         self.config(menu=menubar)
+    
+    def save_wad(self):
+        self.wad.to_file(tkFileDialog.asksaveasfilename())
     
     def load_test_wad(self):
         self.wad_path = r'D:\Doom\wads\valiant_final.wad'
