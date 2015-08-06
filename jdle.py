@@ -60,7 +60,7 @@ class App(Tk):
                 stick = "news"
             if lump_detect_type == "IMAGE":
                 self.preview_panel = views.imagelump.ImageLump(self.preview_frame, data)
-                stick = ""
+                stick = "news"
             if lump_detect_type == "DECORATE":
                 self.preview_panel = views.decorateui.DecorateUI(self.preview_frame, data, self.wad)
                 stick = "news"
