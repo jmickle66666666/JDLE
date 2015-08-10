@@ -6,7 +6,7 @@ Requirements:
 * pillow- https://github.com/python-pillow/Pillow 
 * requests- https://github.com/kennethreitz/requests 
 
-A simple lump viewing/editing tool, built in Python on top of the Omgifol library.
+A simple lump viewing/editing tool, built in Python 2 on top of the Omgifol library.
 Early WIP
 
 Current Features:
