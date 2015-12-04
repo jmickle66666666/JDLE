@@ -1,7 +1,7 @@
 import threading
 import utils.idgames as idgames
 import requests
-from Tkinter import *
+from tkinter import *
 from jdle_data import *
 import random
 import zipfile

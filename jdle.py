@@ -1,7 +1,7 @@
-from ttk import *
+from tkinter.ttk import *
 from omg import *
 from views.idgamesui import *
-import tkFileDialog
+from tkinter import filedialog
 import subprocess
 from PIL import Image, ImageTk
 import sys
@@ -141,7 +141,7 @@ class App(Tk):
         subprocess.call(ZDOOM_PATH+" -file "+self.wad_path)
     
     def load_dialog(self):
-        self.wad_path = tkFileDialog.askopenfilename(filetypes=[('wad files', "wad")])
+        self.wad_path = filedialog.askopenfilename(filetypes=[('wad files', "wad")])
         self.load_wad(self.wad_path)
     
     def open_idgames(self):

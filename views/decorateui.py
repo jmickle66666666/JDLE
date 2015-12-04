@@ -1,6 +1,6 @@
-from Tkinter import *
-from Tkconstants import *
-from ttk import *
+from tkinter import *
+from tkinter.constants import *
+from tkinter.ttk import *
 import utils.decorate
 from PIL import ImageTk
 import threading

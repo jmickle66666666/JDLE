@@ -76,7 +76,7 @@ class Actor:
         self.code = ""
         
     def p(self):
-        print self.name
+        print(self.name)
         for s in self.states:
             s.p()
             
@@ -104,7 +104,7 @@ class Frame:
         self.tics = int(tics)
         
     def p(self):
-        print '  {} {} {}'.format(self.sprite, self.frame, self.tics)
+        print('  {} {} {}').format(self.sprite, self.frame, self.tics)
         
 
 if __name__ == '__main__':

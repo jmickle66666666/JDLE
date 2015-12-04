@@ -1,5 +1,5 @@
-from Tkinter import *
-from Tkconstants import *
+from tkinter import *
+from tkinter.constants import *
 import omg
 
 
