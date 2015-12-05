@@ -1,6 +1,6 @@
-from Tkinter import *
-from Tkconstants import *
-from ttk import *
+from six.moves.tkinter import *
+from six.moves.tkinter_constants import *
+from six.moves.tkinter_ttk import *
 import utils.decorate
 from PIL import ImageTk
 import threading

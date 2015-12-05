@@ -1,5 +1,4 @@
-from Tkinter import *
-
+from six.moves.tkinter import *
 
 class SettingsUI(Tk):
     def __init__(self,  parent):

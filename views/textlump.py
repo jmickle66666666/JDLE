@@ -1,7 +1,6 @@
-from Tkinter import *
-from Tkconstants import *
+from six.moves.tkinter import *
+from six.moves.tkinter_constants import *
 import omg
-
 
 class TextLump(Frame):
     def __init__(self, parent, data):

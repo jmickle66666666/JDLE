@@ -1,6 +1,5 @@
-from Tkinter import *
+from six.moves.tkinter import *
 from PIL import Image, ImageTk
-
 
 class ImageLump(Frame):
     def __init__(self, parent, data):
