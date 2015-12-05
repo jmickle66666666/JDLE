@@ -1,7 +1,7 @@
+from six.moves.tkinter import *
 import threading
 import utils.idgames as idgames
 import requests
-from Tkinter import *
 from jdle_data import *
 import random
 import zipfile

@@ -1,7 +1,7 @@
-from ttk import *
+from six.moves.tkinter_ttk import *
+from six.moves import tkinter_tkfiledialog as tkFileDialog
 from omg import *
 from views.idgamesui import *
-import tkFileDialog
 import subprocess
 from PIL import Image, ImageTk, _imaging
 import sys
